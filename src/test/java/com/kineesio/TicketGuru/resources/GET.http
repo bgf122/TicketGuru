@@ -1,0 +1,101 @@
+###
+// Tietokannan resetointi
+POST http://localhost:8080/reset
+
+###
+// Hae token ja aseta se muuttujaan
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "myyja",
+  "password": "myyja"
+}
+
+> {% client.global.set("jwt_token", response.headers.valueOf("Authorization"));
+%}
+
+###
+// Koeta hakea token virheellisellä tunnuksella
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "asdf",
+  "password": "myyasdfja"
+}
+
+> {% client.global.set("jwt_token_bad", response.headers.valueOf("Authorization"));
+%}
+
+###
+/// TAPAHTUMAT ///
+###
+// Hae  kaikki tapahtumat
+GET http://localhost:8080/api/tapahtumat
+Authorization: {{ jwt_token }}
+
+ {%
+    client.test("Request executed successfully", function() {
+        client.assert(response.status === 200, "Et saanut dataa!");
+    });
+%}
+
+
+###
+
+// Hae tapahtuma jota ei ole olemassa
+GET http://localhost:8080/api/tapahtumat/15
+Authorization: {{ jwt_token }}
+
+> {%
+    client.test("Pyyntö suoritettu onnistuneesti", function() {
+        client.assert(response.status === 200, "Et saanut dataa!");
+    });
+%}
+
+###
+
+// Hae yksittäinen tapahtuma
+GET http://localhost:8080/api/tapahtumat/1
+Authorization: {{ jwt_token }}
+
+/// TAPAHTUMAPAIKAT ///
+###
+// Hae kaikki tapahtumapaikat
+GET http://localhost:8080/api/tapahtumapaikat
+Authorization: {{ jwt_token }}
+
+###
+// Hae yksittäinen tapahtumapaikka
+GET http://localhost:8080/api/tapahtumapaikat/1
+Authorization: {{ jwt_token }}
+
+###
+// Hae kaikki liput
+GET http://localhost:8080/api/liput
+Authorization: {{ jwt_token }}
+
+
+
+###
+// Hae kaikki lippukategoriat
+GET http://localhost:8080/api/lippukategoriat
+Authorization: {{ jwt_token }}
+
+
+
+###
+// Hae yksittäinen tilaus
+GET http://localhost:8080/api/tilaukset/2
+Authorization: {{ jwt_token }}
+
+
+
+###
+// Hae käyttäjt
+GET http://localhost:8080/api/kayttajat
+Authorization: {{ jwt_token }}
+
+
+###

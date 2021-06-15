@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+>
+<meta charset="UTF-8">
+<head>
+    <title>Tapahtumalista</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <script crossorigin="anonymous"
+            src="https://kit.fontawesome.com/33c2e3aa17.js"></script>
+</head>
+<link crossorigin="anonymous"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      rel="stylesheet">
+</head>
+<body>
+
+<div class="pb-2 mt-4 mb-2 border-bottom">
+    <h1>Myydyt liput</h1>
+</div>
+
+<div class="container">
+
+    <table class="table table-hover table-dark">
+        <thead class="thead-dark">
+        <tr>
+            <th>Tapahtuma</th>
+            <th>Käytetty</th>
+            <th>Lipun hash</th>
+
+            <th></th>
+        </tr>
+        </thead>
+        <tr th:each="lippu : ${liput}">
+            <td th:text="${lippu.tapahtuma.kuvaus}"></td>
+
+
+            <td
+                    th:text="${lippu.kaytetty}"></td>
+
+
+            <td
+                    th:text="${lippu.lippuhash}"></td>
+        </tr>
+
+    </table>
+
+    <a class="btn btn-primary" href="/">Alkuun</a>
+</div>
+</body>
+</html>

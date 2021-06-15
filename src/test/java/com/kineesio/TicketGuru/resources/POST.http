@@ -1,0 +1,347 @@
+###
+// Tietokannan resetointi
+POST http://localhost:8080/reset
+
+<> 2020-11-19T062549.200.txt
+<> 2020-11-19T061601.200.txt
+<> 2020-11-19T060348.200.txt
+<> 2020-11-17T115334.200.txt
+<> 2020-11-17T115305.200.txt
+
+###
+// Myyjätunnuksen generointi
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "myyja",
+  "password": "myyja"
+}
+
+> {% client.global.set("jwt_token_myyja", response.headers.valueOf("Authorization"));
+%}
+
+<> 2020-11-19T062550.200.json
+<> 2020-11-19T061601.200.json
+<> 2020-11-19T060349.200.json
+<> 2020-11-17T115334.200.json
+<> 2020-11-17T115306.200.json
+<> 2020-11-07T043336.200.json
+
+###
+// Esimiestunnuksen generointi
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "esimies",
+  "password": "esimies"
+}
+
+> {% client.global.set("jwt_token_esimies", response.headers.valueOf("Authorization"));%}
+
+<> 2020-11-19T062550-1.200.json
+<> 2020-11-19T061602.200.json
+<> 2020-11-19T060351.200.json
+<> 2020-11-17T115334-1.200.json
+<> 2020-11-17T115306-1.200.json
+
+###
+// Uuden tapahtuman luominen
+POST http://localhost:8080/api/tapahtumat
+Authorization: {{jwt_token_esimies}}
+Content-Type: application/json
+
+{
+  "kuvaus": "asdfs",
+  "kapasiteetti": 1,
+  "alkuaika": "2020-09-29T21:00:00.000+00:00",
+  "tapahtumapaikka": "http://localhost:8080/tapahtumapaikat/3"
+}
+
+<> 2020-11-19T060351.403.json
+<> 2020-11-17T115335.400.txt
+<> 2020-11-17T115306.403.json
+
+###
+// Tapahtuma - virheen generointi
+POST http://localhost:8080/api/tapahtumat
+Authorization: {{jwt_token_esimies}}
+Content-Type: application/json
+
+{
+  "kuvaus": "",
+  "kapasiteetti": asdf,
+  "alkuaika": "2020-09-29T21:00:00.000+00:00",
+  "tapahtumapaikka": "http://localhost:8080/tapahtumapaikat/3"
+}
+
+<> 2020-11-19T062550.400.txt
+<> 2020-11-19T061602.400.txt
+<> 2020-11-19T060351-1.403.json
+<> 2020-11-17T115335-1.400.txt
+<> 2020-11-17T115306-1.403.json
+<> 2020-11-07T054216.400.txt
+<> 2020-11-07T053848.400.json
+
+###
+// Tapahtumapaikan luonti
+POST http://localhost:8080/api/tapahtumapaikat
+Authorization: {{jwt_token_esimies}}
+Content-Type: application/json
+
+{
+  "tapahtumapaikka": "Demola",
+  "osoite": "Yrjönkatu 11, 00100 Helsinki",
+  "kapasiteetti": 50,
+  "puhelinnumero": "09-123123",
+  "yhteyshenkilo": "Jyrki Hämäläinen"
+}
+
+<> 2020-11-19T060351-2.403.json
+<> 2020-11-17T115306-2.403.json
+
+###
+// Tapahtumapaikka - virheen generointi
+POST http://localhost:8080/api/tapahtumapaikat
+Authorization: {{jwt_token_esimies}}
+Content-Type: application/json
+
+{
+  "tapahtumapaikka": "",
+  "osoite": "Yrjönkatu 11, 00100 Helsinki",
+  "kapasiteetti": 50,
+  "puhelinnumero": "09-123123",
+  "yhteyshenkilo": "Jyrki Hämäläinen"
+}
+
+<> 2020-11-19T062551.400.json
+<> 2020-11-19T061602.400.json
+<> 2020-11-19T060351-3.403.json
+<> 2020-11-17T115335.400.json
+<> 2020-11-17T115306-3.403.json
+
+###
+POST http://localhost:8080/api/lippukategoriat
+Authorization: {{jwt_token_esimies}}
+Content-Type: application/json
+
+{
+  "lippukategoria": "permanto",
+  "hinta": 15.0,
+  "tapahtuma": "http://localhost:8080/api/tapahtumat/2"
+}
+
+<> 2020-11-19T060351-4.403.json
+<> 2020-11-17T115307.403.json
+
+###
+
+POST http://localhost:8080/api/liput
+Authorization: {{jwt_token_myyja}}
+Content-Type: application/json
+
+{
+  "lippukategoria": "http://localhost:8080/api/lippukategoriat/2",
+  "tilaus": "http://localhost:8080/api/tilaukset/2"
+}
+
+<> 2020-11-19T060351-5.403.json
+<> 2020-11-17T115307-1.403.json
+
+
+
+###
+
+POST http://localhost:8080/api/tilaukset
+Authorization: {{jwt_token_myyja}}
+Content-Type: application/json
+
+{
+  "kayttaja": "http://localhost:8080/api/kayttajat/1",
+  "tila": "KESKEN"
+}
+
+<> 2020-11-19T062551.409.json
+<> 2020-11-19T061602.409.json
+<> 2020-11-19T060351-6.403.json
+<> 2020-11-17T115335.409.json
+<> 2020-11-17T115307-2.403.json
+<> 2020-11-07T125928.409.json
+<> 2020-11-07T123022.409.json
+<> 2020-11-03T030002-4.403.json
+<> 2020-11-02T093156-1.404.json
+<> 2020-11-02T092747-1.404.json
+
+###
+
+DELETE http://localhost:8080/api/kayttajat/4
+Authorization: {{jwt_token_myyja}}
+Content-Type: application/json
+
+<> 2020-11-19T062551.403.txt
+<> 2020-11-19T061602.403.txt
+<> 2020-11-19T060351-7.403.json
+<> 2020-11-17T115335.403.txt
+<> 2020-11-17T115307-3.403.json
+<> 2020-11-06T095445.403.json
+<> 2020-11-06T095306.404.txt
+
+###
+
+GET http://localhost:8080/api/kayttajat
+Authorization: {{jwt_token_myyja}}
+Content-Type: application/json
+
+<> 2020-11-19T062551.200.json
+<> 2020-11-19T061602-1.200.json
+<> 2020-11-19T060351-1.200.json
+<> 2020-11-17T115335.200.json
+<> 2020-11-17T115307.200.json
+<> 2020-11-07T125700.200.json
+<> 2020-11-07T121218.200.json
+<> 2020-11-06T095937.200.json
+<> 2020-11-06T095732.200.json
+
+###
+POST http://localhost:8080/api/kayttajat/service/uusiKayttaja
+Authorization: {{jwt_token_esimies}}
+Content-Type: application/json
+
+{
+  "kayttajanimi": "Testia",
+  "etunimi": "Etunimi",
+  "sukunimi": "Sukunimi",
+  "roolit": "MYYJA",
+  "salasana": "salasana",
+  "email": "testia@ticketguru.com"
+}
+
+<> 2020-11-19T062551.404.txt
+<> 2020-11-19T061603.404.txt
+<> 2020-11-19T060351-8.403.json
+<> 2020-11-17T115335.200.txt
+<> 2020-11-17T115307-4.403.json
+
+
+
+###
+
+PATCH http://localhost:8080/api/kayttajat/14
+Authorization: {{jwt_token_esimies}}
+Content-Type: application/json
+
+{
+  "sukunimi":
+}
+
+<> 2020-11-19T062551-1.404.txt
+<> 2020-11-19T061603-1.404.txt
+<> 2020-11-19T060351-9.403.json
+<> 2020-11-17T115335.404.txt
+<> 2020-11-17T115307-5.403.json
+
+
+
+###
+GET http://localhost:8080/api/kayttajat/
+Authorization: {{jwt_token_esimies}}
+Content-Type: application/json
+
+<> 2020-11-19T062551-1.200.json
+<> 2020-11-19T061603.200.json
+<> 2020-11-19T060351-2.200.json
+<> 2020-11-17T115335-1.200.json
+<> 2020-11-17T115307-1.200.json
+<> 2020-11-07T025228.200.json
+
+###
+
+GET http://localhost:8080/api/lippukategoriat/1
+Authorization: {{jwt_token_esimies}}
+Content-Type: application/json
+
+<> 2020-11-19T062551-2.200.json
+<> 2020-11-19T061603-1.200.json
+<> 2020-11-19T060352.200.json
+<> 2020-11-17T115335-2.200.json
+<> 2020-11-17T115307-2.200.json
+<> 2020-11-07T033938.200.json
+<> 2020-11-07T025713.200.json
+
+###
+GET http://localhost:8080/api/lippukategoriat/1
+
+Content-Type: application/json
+
+<> 2020-11-19T062551-3.200.json
+<> 2020-11-19T061603-2.200.json
+<> 2020-11-19T060352-1.200.json
+<> 2020-11-17T115335-3.200.json
+<> 2020-11-17T115307-3.200.json
+<> 2020-11-07T033805.403.json
+
+
+
+###
+
+DELETE http://localhost:8080/api/lippukategoriat/1
+Authorization: {{jwt_token_esimies}}
+Content-Type: application/json
+
+<> 2020-11-19T062551-1.409.json
+<> 2020-11-19T061603.409.json
+<> 2020-11-19T060352.403.json
+<> 2020-11-17T115335-1.409.json
+<> 2020-11-17T115307-6.403.json
+<> 2020-11-07T033632.400.txt
+<> 2020-11-07T033025.400.txt
+
+###
+
+POST http://localhost:8080/api/lippukategoriat/
+Authorization: {{jwt_token_esimies}}
+Content-Type: application/json
+
+{
+  "lippukategoria": "Testi",
+  "hinta": -1,
+  "tapahtuma": "http://localhost:8080/api/tapahtumat/1"
+}
+
+<> 2020-11-19T062551-1.400.json
+<> 2020-11-19T061603.400.json
+<> 2020-11-19T060352-1.403.json
+<> 2020-11-17T115336.400.json
+<> 2020-11-17T115307-7.403.json
+
+###
+
+PATCH http://localhost:8080/api/lippukategoriat/1
+Authorization: {{jwt_token_esimies}}
+Content-Type: application/json
+
+{
+                "lippukategoria": "Testi",
+                "hinta": 26.60
+}
+
+<> 2020-11-19T060352-2.403.json
+<> 2020-11-17T115307-8.403.json
+<> 2020-11-07T034705.400.txt
+
+###
+PATCH http://localhost:8080/api/liput/service/kaytaLippu/
+Authorization: {{jwt_token_myyja}}
+Content-Type: application/json
+
+{
+    "kaytetty": "2020-03-19T14:11:00Z",
+    "lippuhash": "679a3f38-20a0s-11eb-a6f5-00155d9458c7"
+}
+
+<> 2020-11-19T062552.404.txt
+
+
+
+###
